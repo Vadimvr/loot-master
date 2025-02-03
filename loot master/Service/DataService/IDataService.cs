@@ -8,6 +8,8 @@ namespace loot_master.Service.Data
 
         void AddNewPlayer(Player pLayer);
         void DeletePlayer(int v);
+        public event Action<IEnumerable<Player>> AddPlayersInRaidEvent;
+        void AddPlayersInRaid(IEnumerable<Player> players);
     }
     internal class DataService : IDataService
     {
@@ -42,6 +44,14 @@ namespace loot_master.Service.Data
                 Players.Remove(item);
             }
         }
+
+        public event Action<IEnumerable<Player>> AddPlayersInRaidEvent;
+
+        public void AddPlayersInRaid(IEnumerable<Player> players)
+        {
+            AddPlayersInRaidEvent?.Invoke(players);
+        }
+
         public ObservableCollection<Player> Players { get => players; set => players = value; }
     }
 
@@ -49,5 +59,22 @@ namespace loot_master.Service.Data
     {
         public string? Name { get; set; }
         public int Id { get; set; }
+
+        public static implicit operator PlayerInRaid(Player player)
+        {
+            return new PlayerInRaid() { Id = player.Id, Name = player.Name, Color = "Red" };
+        }
+    }
+
+    internal class PlayerInRaid :ViewModels.Base.ViewModelBase
+    {
+        public string? Name { get; set; }
+        public int Id { get; set; }
+
+
+        #region Color type string -  
+        private string _Color =   "Red";
+        public string Color { get => _Color; set => Set(ref _Color, value); }
+        #endregion
     }
 }

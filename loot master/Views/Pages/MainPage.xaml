@@ -6,9 +6,12 @@
              BindingContext="{Binding Path=MainWindowViewModel,Source={StaticResource Locator}}"
              Title="{Binding Title}">
     <Border Stroke="red">
-        <StackLayout VerticalOptions="Fill"
-                     HorizontalOptions="Fill">
-            <c:GuildView />
-        </StackLayout>
+        <ScrollView VerticalScrollBarVisibility="Always" Padding="15,0,15,0">
+            <StackLayout VerticalOptions="Fill"
+                         HorizontalOptions="Fill">
+                <c:GuildView />
+                <c:RaidView />
+            </StackLayout>
+        </ScrollView>
     </Border>
 </ContentPage>

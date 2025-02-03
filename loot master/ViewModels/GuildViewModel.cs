@@ -10,7 +10,7 @@ namespace loot_master.ViewModels
     internal class GuildViewModel : ViewModelBase
     {
         #region ViewName type string -  
-        private string _ViewName = nameof(GuildViewModel);
+        private string _ViewName = "Игроки в гильдии";
         private readonly IDataService _dataService;
 
         public string ViewName { get => _ViewName; set => Set(ref _ViewName, value); }
@@ -65,10 +65,17 @@ namespace loot_master.ViewModels
         private bool CanAddSelectedPlayersInRaidCommandExecute(object? p) => SelectedPlayers.Count > 0;
         private void OnAddSelectedPlayersInRaidCommandExecuted(object? p)
         {
+            List<Player> selectedPlayers = new List<Player>();
+            Player? player;
             foreach (var item in SelectedPlayers)
             {
-                var x = item.ToString();
+                if (item is Player && (player = item as Player) != null )
+                {
+                    selectedPlayers.Add(player);
+                }
             }
+            _dataService.AddPlayersInRaid(selectedPlayers);
+            SelectedPlayers.Clear();
         }
         #endregion
 
@@ -114,6 +121,5 @@ namespace loot_master.ViewModels
             }
         }
         #endregion
-
     }
 }
