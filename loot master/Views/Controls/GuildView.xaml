@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="loot_master.Views.Controls.GuildView"
+             BindingContext="{Binding Path=GuildViewModel,Source={StaticResource Locator}}"
+             xmlns:dg="clr-namespace:Maui.DataGrid;assembly=Maui.DataGrid"
+             x:Name="TestControlView">
+    <ScrollView>
+
+        <Border Stroke="WhiteSmoke"
+                Margin="10"
+                Padding="10"
+                StrokeShape="RoundRectangle 10,10,10,10">
+            <VerticalStackLayout>
+                <Label HorizontalTextAlignment="Center"
+                       FontSize="24"
+                       Text="Игроки гильдии" />
+                <BoxView HeightRequest="2"
+                         Color="DarkGray"
+                         Margin="10" />
+                <CollectionView  Grid.Row="1"
+                                 SelectionMode="Multiple"
+                                 ItemsSource="{Binding PLayers}"
+                                 SelectedItems="{Binding SelectedPlayers, Mode=TwoWay}"
+                                 SelectionChangedCommand="{Binding SelectedPlayersCommand}"
+                                 SelectionChangedCommandParameter="{Binding Path=SelectedItem, Source={RelativeSource Self}}"
+                                 VerticalOptions="Fill"
+                                 HorizontalOptions="Fill"
+                                 VerticalScrollBarVisibility="Always"
+                                 HeightRequest="300">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Grid Margin="8"
+                                  ColumnDefinitions="100,*,100"
+                                  Padding="0,5,0,5">
+                                <Label Text="{Binding Path=Id}"
+                                       Grid.Column="0"
+                                       FontSize="20"
+                                       TextColor="Red"
+                                       Margin="10" />
+                                <Label Text="{Binding Path=Name}"
+                                       VerticalOptions="Fill"
+                                       Grid.Column="1"
+                                       FontSize="20"
+                                       TextColor="#006064"
+                                       Margin="10" />
+                                <Button Text="Del"
+                                        BackgroundColor="Red"
+                                        Grid.Column="2"
+                                        Command="{Binding  Source={StaticResource Locator}, Path=GuildViewModel.DeleteSelectPlayerCommand }"
+                                        CommandParameter="{Binding Id}">
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Grid  ColumnDefinitions="100,*,100"
+                       Padding="0,5,0,5">
+                    <Button Text="Add in Raid"
+                            Command="{Binding AddSelectedPlayersInRaidCommand}"
+                            Grid.Column="0" />
+                    <Entry IsPassword="False"
+                           Grid.Column="1"
+                           Margin="5,0,5,0"
+                           Placeholder="New Name"
+                           VerticalOptions="Fill"
+                           Text="{Binding NewPlayerName, Mode=TwoWay}" />
+                    <Button Text="Add in Guild"
+                            Grid.Column="2"
+                            Command="{Binding AddNewPlayerCommand}" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+    </ScrollView>
+</ContentView>
