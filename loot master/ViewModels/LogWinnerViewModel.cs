@@ -3,7 +3,6 @@ using loot_master.Models;
 using loot_master.Service.Data;
 using loot_master.ViewModels.Base;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows.Input;
 
 namespace loot_master.ViewModels
@@ -13,8 +12,12 @@ namespace loot_master.ViewModels
         private readonly IDataService _dataService;
         #region ViewName type string -  
         private string _ViewName = "Лог";
-
         public string ViewName { get => _ViewName; set => Set(ref _ViewName, value); }
+        #endregion
+
+        #region WinnerLog type List<Winner> -  
+        private ObservableCollection<Winner> _WinnerLog = new ObservableCollection<Winner>();
+        public ObservableCollection<Winner> WinnerLog { get => _WinnerLog; set => Set(ref _WinnerLog, value); }
         #endregion
         public LogWinnerViewModel(IDataService dataService)
         {
@@ -32,52 +35,31 @@ namespace loot_master.ViewModels
             AddWinerInLog(arg1, time);
             _dataService.AddWinerInLogEvent -= AddFirstRecord;
             LambdaCommand.CallAllCanExecute();
-
         }
-
-
-        #region WinnerLog type List<Winner> -  
-        private ObservableCollection<Winner> _WinnerLog = new ObservableCollection<Winner>();
-        public ObservableCollection<Winner> WinnerLog { get => _WinnerLog; set => Set(ref _WinnerLog, value); }
-        #endregion
-
+        private void AddWinerInLog(string name, DateTime time) => WinnerLog.Add(_dataService.AddWinnerInLog(new Winner() { Name = name, Date = time }));
 
         #region ExportFileCommand - описание команды 
         private LambdaCommand? _ExportFileCommand;
-
         public ICommand ExportFileCommand => _ExportFileCommand ??=
             new LambdaCommand(OnExportFileCommandExecuted, CanExportFileCommandExecute, true);
         private bool CanExportFileCommandExecute(object? p) => WinnerLog.Count > 0;
         private void OnExportFileCommandExecuted(object? p)
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                ShareFile().GetAwaiter().GetResult();
+                string fn = "Log.txt";
+                string file = Path.Combine(FileSystem.CacheDirectory, fn);
+                File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id, x.Name, x.Date)));
+
+
+                await Share.Default.RequestAsync(new ShareFileRequest
+                {
+                    Title = "Share text file",
+                    File = new ShareFile(file)
+                });
             });
         }
         #endregion
-        public async Task ShareFile()
-        {
-            string fn = "Log.txt";
-            string file = Path.Combine(FileSystem.CacheDirectory, fn);
-            File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id, x.Name, x.Date)));
-
-            var x = new ShareFileRequest
-            {
-                Title = "Share text file",
-                File = new ShareFile(file)
-            };
-           await Share.Default.RequestAsync(x);
-        }
-
-        private void AddWinerInLog(string name, DateTime time)
-        {
-            var winner = new Winner() { Name = name, Date = time };
-            winner = _dataService.db.Winners.Add(winner).Entity;
-            _dataService.db.SaveChanges();
-            WinnerLog.Add(winner);
-        }
-
 
         #region ClearLogFileCommand - описание команды 
         private LambdaCommand? _ClearLogFileCommand;
@@ -87,14 +69,7 @@ namespace loot_master.ViewModels
         private void OnClearLogFileCommandExecuted(object? p)
         {
             WinnerLog.Clear();
-            foreach (var item in _dataService.db.Winners)
-            {
-                _dataService.db.Remove(item);
-            }
-            _dataService.db.SaveChanges();
-            string fn = "Log.txt";
-            string file = Path.Combine(FileSystem.CacheDirectory, fn);
-            File.WriteAllText(file,string.Empty);
+            _dataService.RemoveLog();
         }
         #endregion
     }

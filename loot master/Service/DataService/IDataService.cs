@@ -14,14 +14,19 @@ namespace loot_master.Service.Data
         public event Action<string, DateTime>? AddWinerInLogEvent;
         void AddWinerInLog(string winerName, DateTime date);
         void AddPlayersInRaid(IEnumerable<Player> players);
+        void RemoveLog();
+        Winner AddWinnerInLog(Winner winner);
+
         public ApplicationDb db { get; }
     }
     internal class DataService : IDataService
     {
         ObservableCollection<Player> players;
-        public DataService()
+        public ObservableCollection<Player> Players { get => players; set => players = value; }
+        public ApplicationDb db { get; private set; }
+        public DataService(ApplicationDb applicationDb)
         {
-            db = new ApplicationDb();
+            db = applicationDb;
             db.Database.EnsureCreated();
             players = new ObservableCollection<Player>(db.Players);
         }
@@ -47,11 +52,17 @@ namespace loot_master.Service.Data
         {
             AddPlayersInRaidEvent?.Invoke(players);
         }
-        public void AddWinerInLog(string winerName, DateTime date)
+        public void AddWinerInLog(string winerName, DateTime date) => AddWinerInLogEvent?.Invoke(winerName, date);
+        public void RemoveLog()
         {
-            AddWinerInLogEvent?.Invoke(winerName, date);
+            db.SaveChanges();
+            db.Winners.Select(x => db.Winners.Remove(x));
         }
-        public ObservableCollection<Player> Players { get => players; set => players = value; }
-        public ApplicationDb db { get; private set; } = new();
+        public Winner AddWinnerInLog(Winner winner)
+        {
+            winner = db.Winners.Add(winner).Entity;
+            db.SaveChanges();
+            return winner;
+        }
     }
 }
