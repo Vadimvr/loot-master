@@ -76,13 +76,14 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />-->
+		<!--<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#ffffff" />-->
 		<!--<MauiIcon Include="Resources\AppIcon\appicon1.svg" Resize="false" />-->
-		<MauiIcon Include="Resources\AppIcon\appicon3.svg"/>
+		<!--<MauiIcon Include="Resources\AppIcon\appicon3.svg"  ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FF0171" Resize="false"/>-->
+		<MauiIcon Include="Resources\AppIcon\appicon3.svg" Resize="false"/>
 		<!--<MauiIcon Include="Resources\AppIcon\appicon2.svg"  Resize="false"/>-->
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<!--<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#FF0171" BaseSize="128,128" />-->
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
