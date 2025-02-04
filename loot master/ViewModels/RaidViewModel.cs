@@ -1,4 +1,5 @@
 ﻿using loot_master.Commands.Base;
+using loot_master.Models;
 using loot_master.Service.Data;
 using loot_master.ViewModels.Base;
 using System.Collections.ObjectModel;
@@ -15,15 +16,16 @@ namespace loot_master.ViewModels
         #endregion
 
         #region PlayersInRaid type List<PlayersInRaid> -  
-        private ObservableCollection<PlayerInRaid> _Players = new ObservableCollection<PlayerInRaid>();
+        private ObservableCollection<PlayerInRaid> _Players = default!;
         public ObservableCollection<PlayerInRaid> Players { get => _Players; set => Set(ref _Players, value); }
         #endregion
 
         public RaidViewModel(IDataService dataService)
         {
             dataService.AddPlayersInRaidEvent += AddPlayersInRaid;
-            LambdaCommand.CallAllCanExecute();
             _dataService = dataService;
+            LambdaCommand.CallAllCanExecute();
+            Players = new ObservableCollection<PlayerInRaid>();
         }
 
         private void AddPlayersInRaid(IEnumerable<Player> players)
@@ -32,7 +34,8 @@ namespace loot_master.ViewModels
             {
                 if (Players.FirstOrDefault(x => x.Id == player.Id) == null)
                 {
-                    Players.Add((PlayerInRaid)player);
+                    PlayerInRaid playerInRaid = (PlayerInRaid)player;
+                    Players.Add(playerInRaid);
                 }
             }
         }
@@ -56,12 +59,10 @@ namespace loot_master.ViewModels
         }
         #endregion
 
-
         #region Winner type string -  
         private string _Winner = default!;
         public string Winner { get => _Winner; set => Set(ref _Winner, value); }
         #endregion
-
 
         #region GetWinerCommand - описание команды 
         private LambdaCommand? _GetWinerCommand;
@@ -86,11 +87,64 @@ namespace loot_master.ViewModels
 
             var winer = preterpers[Random.Next(0, preterpers.Count)];
             winer.Color = "Green";
+            Winner = winer.Name ?? string.Empty;
             if (!string.IsNullOrEmpty(winer.Name))
             {
                 _dataService.AddWinerInLog(winer.Name, DateTime.Now);
             }
         }
         #endregion
+
+        #region SaveDbRaidCommand - описание команды 
+        private LambdaCommand? _SaveDbRaidCommand;
+        public ICommand SaveDbRaidCommand => _SaveDbRaidCommand ??=
+            new LambdaCommand(OnSaveDbRaidCommandExecuted, CanSaveDbRaidCommandExecute);
+        private bool CanSaveDbRaidCommandExecute(object? p) => true;
+        private void OnSaveDbRaidCommandExecuted(object? p)
+        {
+            RemoveFromDb();
+            foreach (var item in Players)
+            {
+                _dataService.db.InRaids.Add(item);
+            }
+            _dataService.db.SaveChanges();
+        }
+        #endregion
+
+        #region LoadDbRaidCommand - описание команды 
+        private LambdaCommand? _LoadDbRaidCommand;
+        public ICommand LoadDbRaidCommand => _LoadDbRaidCommand ??=
+            new LambdaCommand(OnLoadDbRaidCommandExecuted, CanLoadDbRaidCommandExecute);
+        private bool CanLoadDbRaidCommandExecute(object? p) => true;
+        private void OnLoadDbRaidCommandExecuted(object? p)
+        {
+            Players.Clear();
+            foreach (var item in _dataService.db.InRaids)
+            {
+                Players.Add(item);
+            }
+        }
+        #endregion
+
+        #region ClearDbRaidCommand - описание команды 
+        private LambdaCommand? _ClearDbRaidCommand;
+        public ICommand ClearDbRaidCommand => _ClearDbRaidCommand ??=
+            new LambdaCommand(OnClearDbRaidCommandExecuted, CanClearDbRaidCommandExecute);
+        private bool CanClearDbRaidCommandExecute(object? p) => true;
+        private void OnClearDbRaidCommandExecuted(object? p)
+        {
+            Players.Clear();
+            RemoveFromDb();
+        }
+        #endregion
+
+        private void RemoveFromDb()
+        {
+            foreach (var item in _dataService.db.InRaids)
+            {
+                _dataService.db.InRaids.Remove(item);
+            }
+            _dataService.db.SaveChanges();
+        }
     }
 }

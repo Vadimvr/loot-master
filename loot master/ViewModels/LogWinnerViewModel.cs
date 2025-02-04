@@ -1,4 +1,5 @@
 ﻿using loot_master.Commands.Base;
+using loot_master.Models;
 using loot_master.Service.Data;
 using loot_master.ViewModels.Base;
 using System.Collections.ObjectModel;
@@ -51,7 +52,10 @@ namespace loot_master.ViewModels
 
         private void AddWinerInLog(string name, DateTime time)
         {
-            WinnerLog.Add(new Winner(name, time));
+            var winner = new Winner() { Name = name, Date = time };
+            winner = _dataService.db.Winners.Add(winner).Entity;
+            _dataService.db.SaveChanges();
+            WinnerLog.Add(winner);
         }
     }
 }

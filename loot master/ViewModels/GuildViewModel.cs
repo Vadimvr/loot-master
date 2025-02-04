@@ -1,4 +1,5 @@
 ﻿using loot_master.Commands.Base;
+using loot_master.Models;
 using loot_master.Service.Data;
 using loot_master.ViewModels.Base;
 using System.Collections.ObjectModel;
@@ -30,7 +31,7 @@ namespace loot_master.ViewModels
 
 
         #region PLayers type ObservableCollection<string> -  
-        public ObservableCollection<Player> PLayers { get => _dataService.Players; set => _dataService.Players = value; }
+        public ObservableCollection<Player> Players { get => _dataService.Players; set => _dataService.Players = value; }
         #endregion
 
 
@@ -102,7 +103,8 @@ namespace loot_master.ViewModels
         private bool CanAddNewPlayerCommandExecute(object? p) => !string.IsNullOrEmpty(_NewPlayerName);
         private void OnAddNewPlayerCommandExecuted(object? p)
         {
-            _dataService.AddNewPlayer(new Player() { Id = PLayers.Count + 1, Name = NewPlayerName });
+            _dataService.AddNewPlayer(new Player() { Name = NewPlayerName });
+
             NewPlayerName = string.Empty;
         }
         #endregion

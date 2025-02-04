@@ -50,13 +50,48 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <Grid Grid.Row="3"
-                  ColumnDefinitions="100,*,100"
+                  RowDefinitions="auto,auto"
+                  ColumnDefinitions="80,80,*"
                   Margin="10,10,10,10"
                   Padding="0,5,0,5">
+                <Grid Grid.Row="0"
+                      Grid.ColumnSpan="3"
+                      ColumnDefinitions="auto,auto,auto">
+                    <Button Text="Save Dd"
+                            Command="{Binding SaveDbRaidCommand}"
+                            FontSize="14"
+                            Margin="5"
+                            Grid.Column="0" />
+                    <Button Text="Load Dd"
+                            Command="{Binding LoadDbRaidCommand}"
+                            FontSize="14"
+                            Margin="5"
+                            Grid.Column="1" />
+                    <Button Text="Clear Db"
+                            Command="{Binding ClearDbRaidCommand}"
+                            FontSize="14"
+                            Margin="5"
+                            Grid.Column="2" />
+                </Grid>
                 <Button Text="Roll"
                         Command="{Binding GetWinerCommand}"
-                        FontSize="12"
+                        FontSize="14"
+                        Grid.Row="1"
+                        Margin="5"
                         Grid.Column="0" />
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       Padding="10"
+                       VerticalOptions="Center"
+                       FontSize="16"
+                       Text="Winner:" />
+                <Label Grid.Row="1"
+                       Grid.Column="2"
+                       VerticalOptions="Center"
+                       Padding="10"
+                       FontSize="18"
+                       TextColor="Green"
+                       Text="{Binding Winner}" />
             </Grid>
         </Grid>
     </Border>
