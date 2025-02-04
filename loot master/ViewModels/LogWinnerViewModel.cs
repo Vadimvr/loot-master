@@ -22,6 +22,7 @@ namespace loot_master.ViewModels
             {
                 dataService.AddWinerInLogEvent += AddFirstRecord;
             }
+            WinnerLog = new ObservableCollection<Winner>(_dataService.db.Winners.ToList().TakeLast(50));
         }
 
         private void AddFirstRecord(string arg1, DateTime time)
@@ -46,9 +47,28 @@ namespace loot_master.ViewModels
         public ICommand ExportFileCommand => _ExportFileCommand ??=
             new LambdaCommand(OnExportFileCommandExecuted, CanExportFileCommandExecute, true);
         private bool CanExportFileCommandExecute(object? p) => WinnerLog.Count > 0;
-        private void OnExportFileCommandExecuted(object? p) { }
+        private void OnExportFileCommandExecuted(object? p)
+        {
+            Task.Run(async () =>
+            {
+                await ShareFile();
+            });
+        }
         #endregion
+        public async Task ShareFile()
+        {
+            string fn = "Log.txt";
+            string file = Path.Combine(FileSystem.CacheDirectory, fn);
 
+
+            File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id,  x.Name,x.Date)));
+
+            await Share.Default.RequestAsync(new ShareFileRequest
+            {
+                Title = "Share text file",
+                File = new ShareFile(file)
+            });
+        }
 
         private void AddWinerInLog(string name, DateTime time)
         {
