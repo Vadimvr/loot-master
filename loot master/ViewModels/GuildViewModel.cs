@@ -58,7 +58,7 @@ namespace loot_master.ViewModels
             Player? player;
             foreach (var item in SelectedPlayers)
             {
-                if (item is Player && (player = item as Player) != null )
+                if (item is Player && (player = item as Player) != null)
                 {
                     selectedPlayers.Add(player);
                 }
@@ -90,9 +90,20 @@ namespace loot_master.ViewModels
         private bool CanAddNewPlayerCommandExecute(object? p) => !string.IsNullOrEmpty(_NewPlayerName);
         private void OnAddNewPlayerCommandExecuted(object? p)
         {
-            _dataService.AddNewPlayer(new Player() { Name = NewPlayerName });
+            var player = _dataService.Players.FirstOrDefault(x => x.Name == NewPlayerName);
+            if (player is null)
+            {
+                _dataService.AddNewPlayer(new Player() { Name = NewPlayerName });
+                NewPlayerName = string.Empty;
+            }
+            else
+            {
+                Task.Run( () =>
+                {
+                     App.Alert.ShowAlert("Error", $"Player is exist:{NewPlayerName}");
+                });
+            }
 
-            NewPlayerName = string.Empty;
         }
         #endregion
 

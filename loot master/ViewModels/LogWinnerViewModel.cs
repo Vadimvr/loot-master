@@ -3,6 +3,7 @@ using loot_master.Models;
 using loot_master.Service.Data;
 using loot_master.ViewModels.Base;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace loot_master.ViewModels
@@ -49,9 +50,9 @@ namespace loot_master.ViewModels
         private bool CanExportFileCommandExecute(object? p) => WinnerLog.Count > 0;
         private void OnExportFileCommandExecuted(object? p)
         {
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                await ShareFile();
+                ShareFile().GetAwaiter().GetResult();
             });
         }
         #endregion
@@ -61,11 +62,12 @@ namespace loot_master.ViewModels
             string file = Path.Combine(FileSystem.CacheDirectory, fn);
             File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id, x.Name, x.Date)));
 
-            await Share.Default.RequestAsync(new ShareFileRequest
+            var x = new ShareFileRequest
             {
                 Title = "Share text file",
                 File = new ShareFile(file)
-            });
+            };
+           await Share.Default.RequestAsync(x);
         }
 
         private void AddWinerInLog(string name, DateTime time)
@@ -90,8 +92,10 @@ namespace loot_master.ViewModels
                 _dataService.db.Remove(item);
             }
             _dataService.db.SaveChanges();
+            string fn = "Log.txt";
+            string file = Path.Combine(FileSystem.CacheDirectory, fn);
+            File.WriteAllText(file,string.Empty);
         }
         #endregion
-
     }
 }
