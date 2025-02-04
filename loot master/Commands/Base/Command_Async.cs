@@ -21,7 +21,7 @@ namespace loot_master.Commands.Base
                 CallAllCanExecuteEvent?.Invoke();
             }
         }
-        public event EventHandler? ExecutableChanged;
+      //  public event EventHandler? ExecutableChanged;
 
         readonly WeakEventManager _weakEventManager = new WeakEventManager();
         event EventHandler? ICommand.CanExecuteChanged

@@ -8,7 +8,7 @@ namespace loot_master.ViewModels
 {
     internal class RaidViewModel : ViewModelBase
     {
-
+        private readonly IDataService _dataService;
         #region ViewName type string -  
         private string _ViewName = "Игроки в рейде";
         public string ViewName { get => _ViewName; set => Set(ref _ViewName, value); }
@@ -23,6 +23,7 @@ namespace loot_master.ViewModels
         {
             dataService.AddPlayersInRaidEvent += AddPlayersInRaid;
             LambdaCommand.CallAllCanExecute();
+            _dataService = dataService;
         }
 
         private void AddPlayersInRaid(IEnumerable<Player> players)
@@ -66,6 +67,7 @@ namespace loot_master.ViewModels
         private LambdaCommand? _GetWinerCommand;
 
         Random Random = new Random();
+
         public ICommand GetWinerCommand => _GetWinerCommand ??=
             new LambdaCommand(OnGetWinerCommandExecuted, CanGetWinerCommandExecute, true);
         private bool CanGetWinerCommandExecute(object? p) => Players.Count > 0;
@@ -84,6 +86,10 @@ namespace loot_master.ViewModels
 
             var winer = preterpers[Random.Next(0, preterpers.Count)];
             winer.Color = "Green";
+            if (!string.IsNullOrEmpty(winer.Name))
+            {
+                _dataService.AddWinerInLog(winer.Name, DateTime.Now);
+            }
         }
         #endregion
     }

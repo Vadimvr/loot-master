@@ -8,7 +8,9 @@ namespace loot_master.Service.Data
 
         void AddNewPlayer(Player pLayer);
         void DeletePlayer(int v);
-        public event Action<IEnumerable<Player>> AddPlayersInRaidEvent;
+        public event Action<IEnumerable<Player>>? AddPlayersInRaidEvent;
+        public event Action<string, DateTime>? AddWinerInLogEvent;
+        void AddWinerInLog(string winerName, DateTime date);
         void AddPlayersInRaid(IEnumerable<Player> players);
     }
     internal class DataService : IDataService
@@ -29,6 +31,7 @@ namespace loot_master.Service.Data
                 Players.Add(player);
             }
         }
+
         public void DeletePlayer(int v)
         {
             List<Player> list = new List<Player>();
@@ -45,16 +48,32 @@ namespace loot_master.Service.Data
             }
         }
 
-        public event Action<IEnumerable<Player>> AddPlayersInRaidEvent;
+        public event Action<IEnumerable<Player>>? AddPlayersInRaidEvent;
+        public event Action<string, DateTime>? AddWinerInLogEvent;
 
         public void AddPlayersInRaid(IEnumerable<Player> players)
         {
             AddPlayersInRaidEvent?.Invoke(players);
         }
 
+        public void AddWinerInLog(string winerName, DateTime date)
+        {
+            AddWinerInLogEvent?.Invoke(winerName, date);
+        }
+
         public ObservableCollection<Player> Players { get => players; set => players = value; }
     }
 
+    internal class Winner
+    {
+        public Winner(string name, DateTime dateTime)
+        {
+            Name = name;
+            Date = dateTime;
+        }
+        public string? Name { get; set; }
+        public DateTime Date { get; set; }
+    }
     internal class Player
     {
         public string? Name { get; set; }
@@ -66,14 +85,14 @@ namespace loot_master.Service.Data
         }
     }
 
-    internal class PlayerInRaid :ViewModels.Base.ViewModelBase
+    internal class PlayerInRaid : ViewModels.Base.ViewModelBase
     {
         public string? Name { get; set; }
         public int Id { get; set; }
 
 
         #region Color type string -  
-        private string _Color =   "Red";
+        private string _Color = "Red";
         public string Color { get => _Color; set => Set(ref _Color, value); }
         #endregion
     }

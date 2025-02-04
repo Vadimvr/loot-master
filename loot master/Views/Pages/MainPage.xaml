@@ -4,14 +4,15 @@
              x:Class="loot_master.Views.Pages.MainPage"
              xmlns:c="clr-namespace:loot_master.Views.Controls"
              BindingContext="{Binding Path=MainWindowViewModel,Source={StaticResource Locator}}"
-             Title="{Binding Title}">
-    <Border Stroke="red">
-        <ScrollView VerticalScrollBarVisibility="Always" Padding="15,0,15,0">
+            >
+        <ScrollView VerticalScrollBarVisibility="Always"
+                    Margin="4"
+                    Padding="0,0,15,0">
             <StackLayout VerticalOptions="Fill"
                          HorizontalOptions="Fill">
                 <c:GuildView />
-                <c:RaidView />
+                <!--<c:RaidView />
+                <c:LogWinnerView />-->
             </StackLayout>
         </ScrollView>
-    </Border>
 </ContentPage>

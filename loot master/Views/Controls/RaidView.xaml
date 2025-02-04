@@ -4,12 +4,12 @@
              x:Class="loot_master.Views.Controls.RaidView"
              BindingContext="{Binding Path=RaidViewModel,Source={StaticResource Locator}}">
     <Border Stroke="WhiteSmoke"
-            Margin="10"
-            Padding="10"
+            Margin="10,10,10,20"
+            Padding="3"
             StrokeShape="RoundRectangle 10,10,10,10">
         <VerticalStackLayout>
             <Label HorizontalTextAlignment="Center"
-                   FontSize="24"
+                   FontSize="16"
                    Text="{Binding ViewName}" />
             <BoxView HeightRequest="2"
                      Color="DarkGray"
@@ -19,27 +19,28 @@
                              ItemsSource="{Binding Players}"
                              VerticalOptions="Fill"
                              HorizontalOptions="Fill"
+                             Margin="10,0,10,0"
                              VerticalScrollBarVisibility="Always"
                              HeightRequest="300">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-
-                        <Grid Margin="8"
-                              ColumnDefinitions="100,*,100"
-                              Padding="0,5,20,5">
+                        <Grid ColumnDefinitions="50,*,70"
+                              Padding="10,0,10,0">
                             <Label Text="{Binding Path=Id}"
                                    Grid.Column="0"
-                                   FontSize="20"
+                                   FontSize="14"
                                    TextColor="Red"
-                                   Margin="10" />
+                                   VerticalOptions="Center" />
                             <Label Text="{Binding Path=Name}"
-                                   VerticalOptions="Fill"
+                                   VerticalOptions="Center"
                                    Grid.Column="1"
-                                   FontSize="20"
-                                   TextColor="{Binding Path=Color}"
-                                   Margin="10" />
+                                   FontSize="14"
+                                   TextColor="{Binding Color}" />
                             <Button Text="Del"
                                     BackgroundColor="Red"
+                                    FontSize="12"
+                                    HeightRequest="40"
+                                    Margin="2"
                                     Grid.Column="2"
                                     Command="{Binding  Source={StaticResource Locator}, Path=RaidViewModel.DeleteSelectPlayerCommand }"
                                     CommandParameter="{Binding Id}">
@@ -49,11 +50,13 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <Grid  ColumnDefinitions="100,*,100"
+                   Margin="10,10,10,10"
                    Padding="0,5,0,5">
                 <Button Text="Roll"
                         Command="{Binding GetWinerCommand}"
+                        FontSize="12"
                         Grid.Column="0" />
-                    <!--<Entry IsPassword="False"
+                <!--<Entry IsPassword="False"
                            Grid.Column="1"
                            Margin="5,0,5,0"
                            Placeholder="New Name"
