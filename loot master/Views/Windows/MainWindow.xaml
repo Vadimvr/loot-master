@@ -8,30 +8,27 @@
         Title="{Binding Title}">
     <Shell>
         <TabBar>
-            <Tab Title="Guid">
-                <ShellContent ContentTemplate="{DataTemplate p:MainPage}" />
+            <Tab Title="Guild">
+                <ShellContent>
+                    <ContentPage>
+                        <c:GuildView></c:GuildView>
+                    </ContentPage>
+                </ShellContent>
             </Tab>
             <Tab Title="Raid">
-                <ShellContent ContentTemplate="{DataTemplate p:MainPage}" />
+                <ShellContent>
+                    <ContentPage>
+                        <c:RaidView></c:RaidView>
+                    </ContentPage>
+                </ShellContent>
+            </Tab>
+            <Tab Title="Log">
+                <ShellContent>
+                    <ContentPage>
+                        <c:LogWinnerView></c:LogWinnerView>
+                    </ContentPage>
+                </ShellContent>
             </Tab>
         </TabBar>
-        <!--<FlyoutItem Title="Guild_1">
-            <ShellContent  ContentTemplate="{DataTemplate p:MainPage}" />
-        </FlyoutItem>
-        <FlyoutItem Title="Raid">
-            <ShellContent Route="OnePage">
-                <ContentPage>
-                    <ScrollView VerticalScrollBarVisibility="Always"
-                                Margin="4"
-                                Padding="0,0,0,0">
-                        <StackLayout VerticalOptions="Fill"
-                                     HorizontalOptions="Fill">
-                            <c:RaidView />
-                            <c:LogWinnerView />
-                        </StackLayout>
-                    </ScrollView>
-                </ContentPage>
-            </ShellContent>
-        </FlyoutItem>-->
     </Shell>
 </Window>

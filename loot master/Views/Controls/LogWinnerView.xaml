@@ -3,25 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="loot_master.Views.Controls.LogWinnerView"
              BindingContext="{Binding Path=LogWinnerViewModel,Source={StaticResource Locator}}">
-    <Border Stroke="WhiteSmoke"
-            Margin="10,0,10,20"
+    <Border Margin="10"
             Padding="3"
             StrokeShape="RoundRectangle 10,10,10,10">
-        <VerticalStackLayout>
-            <Label HorizontalTextAlignment="Center"
+        <Grid RowDefinitions="auto,auto,*,auto">
+            <Label Grid.Row="0"
+                   HorizontalTextAlignment="Center"
                    FontSize="16"
                    Text="{Binding ViewName}" />
-            <BoxView HeightRequest="2"
-                     Color="DarkGray"
+            <BoxView Grid.Row="1"
+                     HeightRequest="2"
+                     
                      Margin="10" />
-            <CollectionView  Grid.Row="1"
-                             SelectionMode="Single"
-                             ItemsSource="{Binding WinnerLog}"
-                             VerticalOptions="Fill"
-                             HorizontalOptions="Fill"
-                             ItemsUpdatingScrollMode="KeepLastItemInView"
-                             VerticalScrollBarVisibility="Always"
-                             HeightRequest="300">
+            <CollectionView Grid.Row="2"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding WinnerLog}"
+                            VerticalOptions="Fill"
+                            HorizontalOptions="Fill"
+                            ItemsUpdatingScrollMode="KeepLastItemInView"
+                            VerticalScrollBarVisibility="Always">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
@@ -42,13 +42,13 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Grid  ColumnDefinitions="100,*,100"
-                   Margin="10,10,10,10"
-                   Padding="0,5,0,5">
+            <Grid Grid.Row="3"
+                  ColumnDefinitions="auto,*,100"
+                  Margin="10,10,10,10"
+                  Padding="0,5,0,5">
                 <Button Text="Export in file"
-                       
                         Grid.Column="0" />
             </Grid>
-        </VerticalStackLayout>
+        </Grid>
     </Border>
 </ContentView>

@@ -3,25 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="loot_master.Views.Controls.RaidView"
              BindingContext="{Binding Path=RaidViewModel,Source={StaticResource Locator}}">
-    <Border Stroke="WhiteSmoke"
-            Margin="10,10,10,20"
+    <Border Margin="10"
             Padding="3"
             StrokeShape="RoundRectangle 10,10,10,10">
-        <VerticalStackLayout>
-            <Label HorizontalTextAlignment="Center"
+        <Grid RowDefinitions="auto,auto,*,auto">
+            <Label Grid.Row="0"
+                   HorizontalTextAlignment="Center"
                    FontSize="16"
                    Text="{Binding ViewName}" />
-            <BoxView HeightRequest="2"
+            <BoxView Grid.Row="1"
+                     HeightRequest="2"
                      Color="DarkGray"
                      Margin="10" />
-            <CollectionView  Grid.Row="1"
+            <CollectionView  Grid.Row="2"
                              SelectionMode="Single"
                              ItemsSource="{Binding Players}"
                              VerticalOptions="Fill"
                              HorizontalOptions="Fill"
                              Margin="10,0,10,0"
-                             VerticalScrollBarVisibility="Always"
-                             HeightRequest="300">
+                             VerticalScrollBarVisibility="Always">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid ColumnDefinitions="50,*,70"
@@ -49,23 +49,15 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Grid  ColumnDefinitions="100,*,100"
-                   Margin="10,10,10,10"
-                   Padding="0,5,0,5">
+            <Grid Grid.Row="3"
+                  ColumnDefinitions="100,*,100"
+                  Margin="10,10,10,10"
+                  Padding="0,5,0,5">
                 <Button Text="Roll"
                         Command="{Binding GetWinerCommand}"
                         FontSize="12"
                         Grid.Column="0" />
-                <!--<Entry IsPassword="False"
-                           Grid.Column="1"
-                           Margin="5,0,5,0"
-                           Placeholder="New Name"
-                           VerticalOptions="Fill"
-                           Text="{Binding NewPlayerName, Mode=TwoWay}" />
-                    <Button Text="Add in Guild"
-                            Grid.Column="2"
-                            Command="{Binding AddNewPlayerCommand}" />-->
             </Grid>
-        </VerticalStackLayout>
+        </Grid>
     </Border>
 </ContentView>
