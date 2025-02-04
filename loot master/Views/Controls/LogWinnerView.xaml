@@ -43,12 +43,18 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <Grid Grid.Row="3"
-                  ColumnDefinitions="auto,*,100"
+                  ColumnDefinitions="auto,auto,100"
                   Margin="10,10,10,10"
                   Padding="0,5,0,5">
                 <Button Text="Export in file"
                         Command="{Binding ExportFileCommand}"
+                        Margin="5"
                         Grid.Column="0" />
+                <Button Text="Clear Log"
+                        Margin="5"
+                        BackgroundColor="Red"
+                        Command="{Binding ClearLogFileCommand}"
+                        Grid.Column="2" />
             </Grid>
         </Grid>
     </Border>

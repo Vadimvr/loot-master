@@ -59,9 +59,7 @@ namespace loot_master.ViewModels
         {
             string fn = "Log.txt";
             string file = Path.Combine(FileSystem.CacheDirectory, fn);
-
-
-            File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id,  x.Name,x.Date)));
+            File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id, x.Name, x.Date)));
 
             await Share.Default.RequestAsync(new ShareFileRequest
             {
@@ -77,5 +75,23 @@ namespace loot_master.ViewModels
             _dataService.db.SaveChanges();
             WinnerLog.Add(winner);
         }
+
+
+        #region ClearLogFileCommand - описание команды 
+        private LambdaCommand? _ClearLogFileCommand;
+        public ICommand ClearLogFileCommand => _ClearLogFileCommand ??=
+            new LambdaCommand(OnClearLogFileCommandExecuted, CanClearLogFileCommandExecute);
+        private bool CanClearLogFileCommandExecute(object? p) => true;
+        private void OnClearLogFileCommandExecuted(object? p)
+        {
+            WinnerLog.Clear();
+            foreach (var item in _dataService.db.Winners)
+            {
+                _dataService.db.Remove(item);
+            }
+            _dataService.db.SaveChanges();
+        }
+        #endregion
+
     }
 }

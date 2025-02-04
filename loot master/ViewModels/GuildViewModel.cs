@@ -20,20 +20,12 @@ namespace loot_master.ViewModels
         public GuildViewModel(IDataService dataService)
         {
             _dataService = dataService;
-
-            //SelectedPLayers.CollectionChanged += CollectionChanged;
         }
-
-        private void CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            LambdaCommand.CallAllCanExecute();
-        }
-
+        private void CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => LambdaCommand.CallAllCanExecute();
 
         #region PLayers type ObservableCollection<string> -  
         public ObservableCollection<Player> Players { get => _dataService.Players; set => _dataService.Players = value; }
         #endregion
-
 
         #region SelectedPLayers type ObservableCollection<string> -  
         private IList<object> _SelectedPlayers = new List<object>();
@@ -43,8 +35,6 @@ namespace loot_master.ViewModels
             set => Set(ref _SelectedPlayers, value);
         }
         #endregion
-
-
 
         #region SelectedPlayersCommand - описание команды 
         private LambdaCommand? _SelectedPlayersCommand;
@@ -56,8 +46,6 @@ namespace loot_master.ViewModels
             LambdaCommand.CallAllCanExecute();
         }
         #endregion
-
-
 
         #region AddSelectedPlayersInRaidCommand - описание команды 
         private LambdaCommand? _AddSelectedPlayersInRaidCommand;
@@ -95,7 +83,6 @@ namespace loot_master.ViewModels
         }
         #endregion
 
-
         #region AddNewPlayerCommand - описание команды 
         private LambdaCommand? _AddNewPlayerCommand;
         public ICommand AddNewPlayerCommand => _AddNewPlayerCommand ??=
@@ -108,7 +95,6 @@ namespace loot_master.ViewModels
             NewPlayerName = string.Empty;
         }
         #endregion
-
 
         #region NewPlayerName type string -  
         private string _NewPlayerName = default!;
