@@ -10,6 +10,7 @@ namespace loot_master.ViewModels
     internal class LogWinnerViewModel : ViewModelBase
     {
         private readonly IDataService _dataService;
+        private readonly IExportData _exportData;
         #region ViewName type string -  
         private string _ViewName = "Лог";
         public string ViewName { get => _ViewName; set => Set(ref _ViewName, value); }
@@ -19,9 +20,10 @@ namespace loot_master.ViewModels
         private ObservableCollection<Winner> _WinnerLog = new ObservableCollection<Winner>();
         public ObservableCollection<Winner> WinnerLog { get => _WinnerLog; set => Set(ref _WinnerLog, value); }
         #endregion
-        public LogWinnerViewModel(IDataService dataService)
+        public LogWinnerViewModel(IDataService dataService, IExportData exportData)
         {
             _dataService = dataService;
+            _exportData = exportData;
             if (dataService != null)
             {
                 dataService.AddWinerInLogEvent += AddFirstRecord;
@@ -45,19 +47,7 @@ namespace loot_master.ViewModels
         private bool CanExportFileCommandExecute(object? p) => WinnerLog.Count > 0;
         private void OnExportFileCommandExecuted(object? p)
         {
-            Task.Run(async () =>
-            {
-                string fn = "Log.txt";
-                string file = Path.Combine(FileSystem.CacheDirectory, fn);
-                File.WriteAllLines(file, _dataService.db.Winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id, x.Name, x.Date)));
-
-
-                await Share.Default.RequestAsync(new ShareFileRequest
-                {
-                    Title = "Share text file",
-                    File = new ShareFile(file)
-                });
-            });
+            _exportData.Export(_dataService.db.Winners.ToList());
         }
         #endregion
 

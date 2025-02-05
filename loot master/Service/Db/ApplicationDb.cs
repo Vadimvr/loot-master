@@ -1,4 +1,6 @@
-﻿using loot_master.Models;
+﻿// Ignore Spelling: Postgre
+
+using loot_master.Models;
 using loot_master.Service.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,6 +35,7 @@ namespace loot_master.Service.Db
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // TODO 
             optionsBuilder.UseNpgsql("" +
                 "Host=beirn6kh5qmhxnx7jjcl-postgresql.services.clever-cloud.com;" +
                 "Port=50013;" +

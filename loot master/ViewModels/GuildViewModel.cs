@@ -100,7 +100,7 @@ namespace loot_master.ViewModels
             {
                 Task.Run( () =>
                 {
-                     App.Alert.ShowAlert("Error", $"Player is exist:{NewPlayerName}");
+                     App.Alert.ShowAlert("Error", $"Player is exist: {NewPlayerName}");
                 });
             }
 

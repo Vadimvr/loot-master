@@ -11,6 +11,8 @@ namespace loot_master.Service
             .AddSingleton<IAlertService, AlertService>()
             //.AddSingleton<ApplicationDb, DbSqlite>()
             .AddSingleton<ApplicationDb, PostgreSQL>()
+            //.AddSingleton<IExportData, ExportToTxt>()           
+            .AddSingleton<IExportData, ExportToExcel>()
 
             ;
     }
