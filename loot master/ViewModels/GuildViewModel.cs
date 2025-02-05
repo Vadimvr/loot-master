@@ -1,4 +1,5 @@
 ﻿using loot_master.Commands.Base;
+using loot_master.Models;
 using loot_master.Service.Data;
 using loot_master.ViewModels.Base;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ namespace loot_master.ViewModels
     internal class GuildViewModel : ViewModelBase
     {
         #region ViewName type string -  
-        private string _ViewName = nameof(GuildViewModel);
+        private string _ViewName = "Игроки в гильдии";
         private readonly IDataService _dataService;
 
         public string ViewName { get => _ViewName; set => Set(ref _ViewName, value); }
@@ -19,20 +20,12 @@ namespace loot_master.ViewModels
         public GuildViewModel(IDataService dataService)
         {
             _dataService = dataService;
-
-            //SelectedPLayers.CollectionChanged += CollectionChanged;
         }
-
-        private void CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            LambdaCommand.CallAllCanExecute();
-        }
-
+        private void CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => LambdaCommand.CallAllCanExecute();
 
         #region PLayers type ObservableCollection<string> -  
-        public ObservableCollection<Player> PLayers { get => _dataService.Players; set => _dataService.Players = value; }
+        public ObservableCollection<Player> Players { get => _dataService.Players; set => _dataService.Players = value; }
         #endregion
-
 
         #region SelectedPLayers type ObservableCollection<string> -  
         private IList<object> _SelectedPlayers = new List<object>();
@@ -42,8 +35,6 @@ namespace loot_master.ViewModels
             set => Set(ref _SelectedPlayers, value);
         }
         #endregion
-
-
 
         #region SelectedPlayersCommand - описание команды 
         private LambdaCommand? _SelectedPlayersCommand;
@@ -56,8 +47,6 @@ namespace loot_master.ViewModels
         }
         #endregion
 
-
-
         #region AddSelectedPlayersInRaidCommand - описание команды 
         private LambdaCommand? _AddSelectedPlayersInRaidCommand;
         public ICommand AddSelectedPlayersInRaidCommand => _AddSelectedPlayersInRaidCommand ??=
@@ -65,10 +54,17 @@ namespace loot_master.ViewModels
         private bool CanAddSelectedPlayersInRaidCommandExecute(object? p) => SelectedPlayers.Count > 0;
         private void OnAddSelectedPlayersInRaidCommandExecuted(object? p)
         {
+            List<Player> selectedPlayers = new List<Player>();
+            Player? player;
             foreach (var item in SelectedPlayers)
             {
-                var x = item.ToString();
+                if (item is Player && (player = item as Player) != null)
+                {
+                    selectedPlayers.Add(player);
+                }
             }
+            _dataService.AddPlayersInRaid(selectedPlayers);
+            SelectedPlayers.Clear();
         }
         #endregion
 
@@ -87,7 +83,6 @@ namespace loot_master.ViewModels
         }
         #endregion
 
-
         #region AddNewPlayerCommand - описание команды 
         private LambdaCommand? _AddNewPlayerCommand;
         public ICommand AddNewPlayerCommand => _AddNewPlayerCommand ??=
@@ -95,11 +90,22 @@ namespace loot_master.ViewModels
         private bool CanAddNewPlayerCommandExecute(object? p) => !string.IsNullOrEmpty(_NewPlayerName);
         private void OnAddNewPlayerCommandExecuted(object? p)
         {
-            _dataService.AddNewPlayer(new Player() { Id = PLayers.Count + 1, Name = NewPlayerName });
-            NewPlayerName = string.Empty;
+            var player = _dataService.Players.FirstOrDefault(x => x.Name == NewPlayerName);
+            if (player is null)
+            {
+                _dataService.AddNewPlayer(new Player() { Name = NewPlayerName });
+                NewPlayerName = string.Empty;
+            }
+            else
+            {
+                Task.Run( () =>
+                {
+                     App.Alert.ShowAlert("Error", $"Player is exist: {NewPlayerName}");
+                });
+            }
+
         }
         #endregion
-
 
         #region NewPlayerName type string -  
         private string _NewPlayerName = default!;
@@ -114,6 +120,5 @@ namespace loot_master.ViewModels
             }
         }
         #endregion
-
     }
 }

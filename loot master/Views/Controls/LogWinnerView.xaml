@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="loot_master.Views.Controls.LogWinnerView"
+             BindingContext="{Binding Path=LogWinnerViewModel,Source={StaticResource Locator}}">
+    <Border Margin="10"
+            Padding="3"
+            StrokeShape="RoundRectangle 10,10,10,10">
+        <Grid RowDefinitions="auto,auto,*,auto">
+            <Label Grid.Row="0"
+                   HorizontalTextAlignment="Center"
+                   FontSize="16"
+                   Text="{Binding ViewName}" />
+            <BoxView Grid.Row="1"
+                     HeightRequest="2"
+                     
+                     Margin="10" />
+            <CollectionView Grid.Row="2"
+                            SelectionMode="Single"
+                            ItemsSource="{Binding WinnerLog}"
+                            VerticalOptions="Fill"
+                            HorizontalOptions="Fill"
+                            ItemsUpdatingScrollMode="KeepLastItemInView"
+                            VerticalScrollBarVisibility="Always">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Grid Margin="8"
+                              ColumnDefinitions="*,*"
+                              Padding="10,0,10,0">
+                            <Label Text="{Binding Path=Name}"
+                                   VerticalOptions="Fill"
+                                   Grid.Column="0"
+                                   FontSize="14"
+                                   Margin="0" />
+                            <Label Text="{Binding Path=Date}"
+                                   VerticalOptions="Fill"
+                                   Grid.Column="1"
+                                   FontSize="14"
+                                   Margin="0" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid Grid.Row="3"
+                  ColumnDefinitions="120,*,120"
+                  Margin="10,10,10,10"
+                  Padding="0,5,0,5">
+                <Button Text="Export"
+                        Command="{Binding ExportFileCommand}"
+                        Margin="5"
+                        Grid.Column="0" />
+                <Button Text="Delete Log"
+                        Margin="5"
+                        BackgroundColor="Red"
+                        Command="{Binding ClearLogFileCommand}"
+                        Grid.Column="2" />
+            </Grid>
+        </Grid>
+    </Border>
+</ContentView>

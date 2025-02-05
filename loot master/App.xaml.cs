@@ -1,6 +1,7 @@
 ﻿// Ignore Spelling: App
 
 using loot_master.Service;
+using loot_master.Service.Alert;
 using loot_master.ViewModels;
 using loot_master.Views.Windows;
 using Microsoft.Extensions.Configuration;
@@ -21,10 +22,15 @@ namespace loot_master
           .Build();
 
         public static IServiceProvider Services => Host.Services;
-
+        public static IAlertService Alert = default!;
         private async void OnStartup(object? sender, EventArgs e)
         {
             var host = Host;
+            var alert = Services.GetService<IAlertService>();
+            if (alert != null)
+            {
+                Alert = alert;
+            }
             await host.StartAsync();
         }
 

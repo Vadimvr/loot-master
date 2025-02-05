@@ -3,9 +3,103 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="loot_master.Views.Controls.RaidView"
              BindingContext="{Binding Path=RaidViewModel,Source={StaticResource Locator}}">
-    <VerticalStackLayout>
-        <Label Text="{Binding ViewName}"
-               VerticalOptions="Center"
-               HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Border Margin="10"
+            Padding="3"
+            StrokeShape="RoundRectangle 10,10,10,10">
+        <Grid RowDefinitions="auto,auto,*,auto">
+            <Label Grid.Row="0"
+                   HorizontalTextAlignment="Center"
+                   FontSize="16"
+                   Text="{Binding ViewName}" />
+            <BoxView Grid.Row="1"
+                     HeightRequest="2"
+                     Color="DarkGray"
+                     Margin="10" />
+            <CollectionView  Grid.Row="2"
+                             SelectionMode="Single"
+                             ItemsSource="{Binding Players}"
+                             VerticalOptions="Fill"
+                             HorizontalOptions="Fill"
+                             Margin="10,0,10,0"
+                             VerticalScrollBarVisibility="Always">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="50,*,70"
+                              Padding="10,0,10,0">
+                            <Label Text="{Binding Path=Id}"
+                                   Grid.Column="0"
+                                   FontSize="14"
+                                   TextColor="Red"
+                                   VerticalOptions="Center" />
+                            <Label Text="{Binding Path=Name}"
+                                   VerticalOptions="Center"
+                                   Grid.Column="1"
+                                   FontSize="14"
+                                   TextColor="{Binding Color}" />
+                            <Button Text="Del"
+                                    BackgroundColor="Red"
+                                    FontSize="12"
+                                    HeightRequest="40"
+                                    Margin="2"
+                                    Grid.Column="2"
+                                    Command="{Binding  Source={StaticResource Locator}, Path=RaidViewModel.DeleteSelectPlayerCommand }"
+                                    CommandParameter="{Binding Id}">
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid Grid.Row="3"
+                  RowDefinitions="auto,auto,auto"
+                  ColumnDefinitions="80,80,*"
+                  Margin="10,10,10,10"
+                  Padding="0,5,0,5">
+                <Grid Grid.Row="0"
+                      Grid.ColumnSpan="3"
+                      VerticalOptions="Fill"
+                      MaximumWidthRequest="360"
+                      ColumnDefinitions="*,*,*">
+                    <Button Text="Save Db  "
+                            Command="{Binding SaveDbRaidCommand}"
+                            FontSize="14"
+                            Margin="5"
+                            Grid.Column="0" />
+                    <Button Text="Load Db"
+                            Command="{Binding LoadDbRaidCommand}"
+                            FontSize="14"
+                            Margin="5"
+                            Grid.Column="1" />
+                    <Button Text="Clear Db"
+                            Command="{Binding ClearDbRaidCommand}"
+                            FontSize="14"
+                            Margin="5"
+                            Grid.Column="2" />
+                </Grid>
+                <Button Text="Roll"
+                        Command="{Binding GetWinerCommand}"
+                        FontSize="14"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        HorizontalOptions="Start"
+                        Margin="5"
+                        WidthRequest="120"
+                        Grid.Column="0" />
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Padding="10"
+                       VerticalOptions="Center"
+                       FontSize="16"
+                       Margin="0,20"
+                       Text="Winner:" />
+                <Label Grid.Row="1"
+                       Grid.Column="1"
+                       VerticalOptions="Center"
+                       Grid.ColumnSpan="2"
+                       Padding="10"
+                       FontSize="18"
+                       TextColor="Green"
+                       Text="{Binding Winner}" />
+            </Grid>
+        </Grid>
+    </Border>
 </ContentView>

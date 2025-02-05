@@ -3,10 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
         x:Class="loot_master.Views.Windows.MainWindow"
         xmlns:p="clr-namespace:loot_master.Views.Pages"
+        xmlns:c="clr-namespace:loot_master.Views.Controls"
         BindingContext="{Binding Path=MainWindowViewModel, Source={StaticResource Locator}}"
         Title="{Binding Title}">
-    <p:MainPage>
-        
-
-    </p:MainPage>
+    <Shell>
+        <TabBar>
+            <Tab Title="Guild">
+                <ShellContent>
+                    <ContentPage>
+                        <c:GuildView></c:GuildView>
+                    </ContentPage>
+                </ShellContent>
+            </Tab>
+            <Tab Title="Raid">
+                <ShellContent>
+                    <ContentPage>
+                        <c:RaidView></c:RaidView>
+                    </ContentPage>
+                </ShellContent>
+            </Tab>
+            <Tab Title="Log">
+                <ShellContent>
+                    <ContentPage>
+                        <c:LogWinnerView></c:LogWinnerView>
+                    </ContentPage>
+                </ShellContent>
+            </Tab>
+        </TabBar>
+    </Shell>
 </Window>

@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using loot_master.Models;
+using loot_master.Service.Db;
+using System.Collections.ObjectModel;
 
 namespace loot_master.Service.Data
 {
@@ -8,46 +10,59 @@ namespace loot_master.Service.Data
 
         void AddNewPlayer(Player pLayer);
         void DeletePlayer(int v);
+        public event Action<IEnumerable<Player>>? AddPlayersInRaidEvent;
+        public event Action<string, DateTime>? AddWinerInLogEvent;
+        void AddWinerInLog(string winerName, DateTime date);
+        void AddPlayersInRaid(IEnumerable<Player> players);
+        void RemoveLog();
+        Winner AddWinnerInLog(Winner winner);
+
+        public ApplicationDb db { get; }
     }
     internal class DataService : IDataService
     {
         ObservableCollection<Player> players;
-        public DataService()
+        public ObservableCollection<Player> Players { get => players; set => players = value; }
+        public ApplicationDb db { get; private set; }
+        public DataService(ApplicationDb applicationDb)
         {
-            players = new ObservableCollection<Player>();
-            for (int i = 0; i < 80; i++)
-            {
-                players.Add(new Player() { Name = $"Players {i}", Id = i });
-            }
+            db = applicationDb;
+            db.Database.EnsureCreated();
+            players = new ObservableCollection<Player>(db.Players);
         }
         public void AddNewPlayer(Player player)
         {
+            var x = db.Players.Add(player).Entity;
+            db.SaveChanges();
+            Players.Add(x);
+        }
+        public void DeletePlayer(int id)
+        {
+            var player = db.Players.FirstOrDefault(p => p.Id == id);
             if (player != null)
             {
-                Players.Add(player);
+                db.Players.Remove(player);
+                db.SaveChanges();
+                Players.Remove(player);
             }
         }
-        public void DeletePlayer(int v)
+        public event Action<IEnumerable<Player>>? AddPlayersInRaidEvent;
+        public event Action<string, DateTime>? AddWinerInLogEvent;
+        public void AddPlayersInRaid(IEnumerable<Player> players)
         {
-            List<Player> list = new List<Player>();
-            foreach (var item in Players)
-            {
-                if (item.Id == v)
-                {
-                    list.Add(item);
-                }
-            }
-            foreach (var item in list)
-            {
-                Players.Remove(item);
-            }
+            AddPlayersInRaidEvent?.Invoke(players);
         }
-        public ObservableCollection<Player> Players { get => players; set => players = value; }
-    }
-
-    internal class Player
-    {
-        public string? Name { get; set; }
-        public int Id { get; set; }
+        public void AddWinerInLog(string winerName, DateTime date) => AddWinerInLogEvent?.Invoke(winerName, date);
+        public void RemoveLog()
+        {
+            db.SaveChanges();
+            db.Winners.Select(x => db.Winners.Remove(x));
+        }
+        public Winner AddWinnerInLog(Winner winner)
+        {
+            winner = db.Winners.Add(winner).Entity;
+            db.SaveChanges();
+            return winner;
+        }
     }
 }
