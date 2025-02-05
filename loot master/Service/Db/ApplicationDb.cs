@@ -19,9 +19,26 @@ namespace loot_master.Service.Db
             string cacheDir = FileSystem.Current.CacheDirectory;
 
             string path = Path.Combine(cacheDir, name);
-            //     optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseSqlite($"Data Source={path}");
+        }
+    }
+
+    internal class PostgreSQL : ApplicationDb
+    {
+        public PostgreSQL()
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            Database.EnsureCreated();
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql("" +
+                "Host=beirn6kh5qmhxnx7jjcl-postgresql.services.clever-cloud.com;" +
+                "Port=50013;" +
+                "Database=beirn6kh5qmhxnx7jjcl;" +
+                "Username=uyev1tdp7hbqswqfqac9;" +
+                "Password=5FCD5Xsb8rpHCtxjDKYPWPozpVqiiX");
 
         }
     }

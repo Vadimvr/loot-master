@@ -9,7 +9,9 @@ namespace loot_master.Service
         public static IServiceCollection AddServices(this IServiceCollection services) => services
             .AddSingleton<IDataService, DataService>()
             .AddSingleton<IAlertService, AlertService>()
-            .AddSingleton<ApplicationDb, DbSqlite>();
-        
+            //.AddSingleton<ApplicationDb, DbSqlite>()
+            .AddSingleton<ApplicationDb, PostgreSQL>()
+
+            ;
     }
 }
