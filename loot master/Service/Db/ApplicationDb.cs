@@ -47,7 +47,7 @@ namespace loot_master.Service.Db
                 "Port=50013;" +
                 "Database=beirn6kh5qmhxnx7jjcl;" +
                 "Username=uyev1tdp7hbqswqfqac9;" +
-                "Password=5FCD5Xsb8rpHCtxjDKYPWPozpVqiiX");
+                "Password=RVENatCMixlOnIFFQeAD");
 
         }
     }
