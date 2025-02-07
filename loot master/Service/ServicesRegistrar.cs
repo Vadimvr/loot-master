@@ -12,7 +12,7 @@ namespace loot_master.Service
             //.AddSingleton<ApplicationDb, DbSqlite>()
             .AddSingleton<ApplicationDb, PostgreSQL>()
             //.AddSingleton<IExportData, ExportToTxt>()           
-            .AddSingleton<IExportData, ExportToExcel>()
+          .AddSingleton<IExportData, ExportToExcel>()
 
             ;
     }

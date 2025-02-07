@@ -12,6 +12,12 @@ namespace loot_master.Service.Db
         public DbSet<PlayerInRaid> InRaids { get; set; }
         public DbSet<Winner> Winners { get; set; }
       
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Player>().Ignore(c => c.Pr);
+            modelBuilder.Entity<PlayerInRaid>().Ignore(c => c.Name);
+        }
+
     }
     internal class DbSqlite : ApplicationDb
     {

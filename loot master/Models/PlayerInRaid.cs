@@ -7,7 +7,8 @@ namespace loot_master.Models
     {
         [Key]
         public int IdInDb { get; set; }
-        public int Id { get; set; }
+        public int PlayerId { get; set; }
+        public Player Player { get; set; } = default!;
         public string? Name { get; set; }
         #region Color type string -  
         private string _Color = "Red";

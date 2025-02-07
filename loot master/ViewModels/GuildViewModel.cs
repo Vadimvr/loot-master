@@ -10,6 +10,9 @@ namespace loot_master.ViewModels
 {
     internal class GuildViewModel : ViewModelBase
     {
+        const int BaseEp = 5000;
+        const int BaseGp = 500;
+
         #region ViewName type string -  
         private string _ViewName = "Игроки в гильдии";
         private readonly IDataService _dataService;
@@ -93,14 +96,14 @@ namespace loot_master.ViewModels
             var player = _dataService.Players.FirstOrDefault(x => x.Name == NewPlayerName);
             if (player is null)
             {
-                _dataService.AddNewPlayer(new Player() { Name = NewPlayerName });
+                _dataService.AddNewPlayer(new Player() { Name = NewPlayerName, Ep = BaseEp, Gp = BaseGp });
                 NewPlayerName = string.Empty;
             }
             else
             {
-                Task.Run( () =>
+                Task.Run(() =>
                 {
-                     App.Alert.ShowAlert("Error", $"Player is exist: {NewPlayerName}");
+                    App.Alert.ShowAlert("Error", $"Player is exist: {NewPlayerName}");
                 });
             }
 

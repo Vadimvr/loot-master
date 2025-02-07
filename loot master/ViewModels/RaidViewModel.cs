@@ -32,7 +32,7 @@ namespace loot_master.ViewModels
         {
             foreach (var player in players)
             {
-                if (Players.FirstOrDefault(x => x.Id == player.Id) == null)
+                if (Players.FirstOrDefault(x => x.PlayerId == player.Id) == null)
                 {
                     PlayerInRaid playerInRaid = (PlayerInRaid)player;
                     Players.Add(playerInRaid);
@@ -50,7 +50,7 @@ namespace loot_master.ViewModels
             if (p is int && (int)p > 0)
             {
                 int id = (int)p;
-                var player = Players.FirstOrDefault(x => x.Id == id);
+                var player = Players.FirstOrDefault(x => x.PlayerId == id);
                 if (player != null)
                 {
                     Players.Remove(player);
@@ -90,7 +90,7 @@ namespace loot_master.ViewModels
             Winner = winer.Name ?? string.Empty;
             if (!string.IsNullOrEmpty(winer.Name))
             {
-                _dataService.AddWinerInLog(winer.Name, DateTime.Now);
+                _dataService.AddWinerInLog(winer.Name, DateTime.Now, "Roll");
             }
         }
         #endregion

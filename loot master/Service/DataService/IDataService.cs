@@ -11,8 +11,8 @@ namespace loot_master.Service.Data
         void AddNewPlayer(Player pLayer);
         void DeletePlayer(int v);
         public event Action<IEnumerable<Player>>? AddPlayersInRaidEvent;
-        public event Action<string, DateTime>? AddWinerInLogEvent;
-        void AddWinerInLog(string winerName, DateTime date);
+        public event Action<string, DateTime,string>? AddWinerInLogEvent;
+        void AddWinerInLog(string winerName, DateTime date, string description = default!);
         void AddPlayersInRaid(IEnumerable<Player> players);
         void RemoveLog();
         Winner AddWinnerInLog(Winner winner);
@@ -47,12 +47,12 @@ namespace loot_master.Service.Data
             }
         }
         public event Action<IEnumerable<Player>>? AddPlayersInRaidEvent;
-        public event Action<string, DateTime>? AddWinerInLogEvent;
+        public event Action<string, DateTime, string >? AddWinerInLogEvent;
         public void AddPlayersInRaid(IEnumerable<Player> players)
         {
             AddPlayersInRaidEvent?.Invoke(players);
         }
-        public void AddWinerInLog(string winerName, DateTime date) => AddWinerInLogEvent?.Invoke(winerName, date);
+        public void AddWinerInLog(string winerName, DateTime date, string description = default!) => AddWinerInLogEvent?.Invoke(winerName, date, description);
         public void RemoveLog()
         {
             db.SaveChanges();

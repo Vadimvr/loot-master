@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="loot_master.Views.Controls.GuildView"
-             BindingContext="{Binding Path=GuildViewModel,Source={StaticResource Locator}}"
-             xmlns:dg="clr-namespace:Maui.DataGrid;assembly=Maui.DataGrid">
+             x:Class="loot_master.Views.Controls.RaidEpGpView"
+             BindingContext="{Binding Path=RaidEpGpViewModel,Source={StaticResource Locator}}">
     <Border  Margin="10"
              Padding="3"
              StrokeShape="RoundRectangle 10,10,10,10">
@@ -17,17 +16,13 @@
                      Color="DarkGray"
                      Margin="10" />
             <CollectionView Grid.Row="2"
-                            SelectionMode="Multiple"
                             ItemsSource="{Binding Players}"
-                            SelectedItems="{Binding SelectedPlayers, Mode=TwoWay}"
-                            SelectionChangedCommand="{Binding SelectedPlayersCommand}"
-                            SelectionChangedCommandParameter="{Binding Path=SelectedItem, Source={RelativeSource Self}}"
                             HorizontalOptions="Fill"
                             Margin="10,0,10,0"
                             VerticalScrollBarVisibility="Always">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid ColumnDefinitions="50,*,70,70,70,70"
+                        <Grid ColumnDefinitions="50,*,70,70,70,80,80,80"
                               Padding="10,0,10,0">
                             <Label Text="{Binding Path=Id}"
                                    Grid.Column="0"
@@ -49,15 +44,23 @@
                                    Grid.Column="4"
                                    FontSize="14"
                                    VerticalOptions="Center" />
+                            <Button Text="Add Gp"
+                                    BackgroundColor="Green"
+                                    FontSize="12"
+                                    HeightRequest="40"
+                                    Margin="2"
+                                    Grid.Column="5"
+                                    Command="{Binding  Source={StaticResource Locator}, Path=RaidEpGpViewModel.AddGpCommand }"
+                                    CommandParameter="{Binding Id}" />
                             <Button Text="Del"
                                     BackgroundColor="Red"
                                     FontSize="12"
                                     HeightRequest="40"
                                     Margin="2"
-                                    Grid.Column="5"
-                                    Command="{Binding  Source={StaticResource Locator}, Path=GuildViewModel.DeleteSelectPlayerCommand }"
-                                    CommandParameter="{Binding Id}">
-                            </Button>
+                                    Grid.Column="6"
+                                    Command="{Binding  Source={StaticResource Locator}, Path=RaidEpGpViewModel.DeleteFromRaidCommand }"
+                                    CommandParameter="{Binding Id}" />
+                          
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
@@ -66,25 +69,11 @@
                   ColumnDefinitions="100,*,100"
                   Margin="10,10,10,10"
                   Padding="0,10,0,5">
-                <Button Text="Add in Raid"
-                        Command="{Binding AddSelectedPlayersInRaidCommand}"
+                <Button Text="Add Ep"
+                        Command="{Binding AddAllEPCommand}"
                         FontSize="12"
                         Grid.Column="0" />
-                <Entry IsPassword="False"
-                       Grid.Column="1"
-                       Margin="5,0,5,0"
-                       Placeholder="New Name"
-                       VerticalOptions="Fill"
-                       ReturnCommand="{Binding AddNewPlayerCommand}"
-                       Text="{Binding NewPlayerName, Mode=TwoWay}">
-
-                       
-                </Entry>
-                <Button Text="Add in Guild"
-                        Grid.Column="2"
-                        FontSize="12"
-                        Command="{Binding AddNewPlayerCommand}" />
-            </Grid>
+              </Grid>
         </Grid>
     </Border>
 </ContentView>

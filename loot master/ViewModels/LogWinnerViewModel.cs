@@ -31,14 +31,15 @@ namespace loot_master.ViewModels
             WinnerLog = new ObservableCollection<Winner>(_dataService.db.Winners.ToList().TakeLast(50));
         }
 
-        private void AddFirstRecord(string arg1, DateTime time)
+        private void AddFirstRecord(string arg1, DateTime time, string description = default!)
         {
             _dataService.AddWinerInLogEvent += AddWinerInLog;
-            AddWinerInLog(arg1, time);
+            AddWinerInLog(arg1, time, description);
             _dataService.AddWinerInLogEvent -= AddFirstRecord;
             LambdaCommand.CallAllCanExecute();
         }
-        private void AddWinerInLog(string name, DateTime time) => WinnerLog.Add(_dataService.AddWinnerInLog(new Winner() { Name = name, Date = time }));
+        private void AddWinerInLog(string name, DateTime time, string description = default!) => 
+            WinnerLog.Add(_dataService.AddWinnerInLog(new Winner() { Name = name, Date = time , Description = description }));
 
         #region ExportFileCommand - описание команды 
         private LambdaCommand? _ExportFileCommand;

@@ -15,7 +15,7 @@ namespace loot_master.Service.Data
             {
                 string fn = "Log.txt";
                 string file = Path.Combine(FileSystem.CacheDirectory, fn);
-                File.WriteAllLines(file, winners.Select(x => string.Format("{0,-5}{1,-20}  {2}", x.Id, x.Name, x.Date)));
+                File.WriteAllLines(file, winners.Select(x => string.Format("{0,-5}{1,-20} {2,-10} {3}", x.Id, x.Name,x.Description, x.Date)));
 
                 await Share.Default.RequestAsync(new ShareFileRequest
                 {
@@ -40,7 +40,8 @@ namespace loot_master.Service.Data
                     {
                         ew.Write(winner.Id.ToString(), 1, row);
                         ew.Write(winner.Name, 2, row);
-                        ew.Write(winner.Date.ToString("f"), 3, row);
+                        ew.Write(winner.Description, 3, row);
+                        ew.Write(winner.Date.ToString("f"), 4, row);
                         row++;
                     }
                 }
